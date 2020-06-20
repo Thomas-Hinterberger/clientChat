@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="486.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientchat.FXMLDocumentController">
+    <children>
+        <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
+      <TabPane fx:id="pane" layoutX="-6.0" prefHeight="386.0" prefWidth="584.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab fx:id="tabA" text="Account">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="523.0" prefWidth="859.0">
+                     <children>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="360.0" layoutX="303.0" layoutY="-3.0" stroke="TRANSPARENT" strokeType="INSIDE" width="283.0" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#0e9482" height="557.0" layoutX="5.0" stroke="TRANSPARENT" strokeType="INSIDE" width="299.0" />
+                        <TextField fx:id="fxTextFieldSignInUser" layoutX="80.0" layoutY="144.0" promptText="User" />
+                        <TextField fx:id="fxTextFieldSignInPassword" layoutX="80.0" layoutY="190.0" promptText="Password" />
+                        <Button layoutX="128.0" layoutY="246.0" mnemonicParsing="false" onMouseClicked="#handleOnMouseClickedSignIn" text="Sign in" textFill="#390000" />
+                        <TextField fx:id="fxTextFieldSignUpUser" layoutX="348.0" layoutY="144.0" promptText="User" />
+                        <TextField fx:id="fxTextFieldSignUpPassword" layoutX="348.0" layoutY="190.0" promptText="Password" />
+                        <Button layoutX="403.0" layoutY="246.0" mnemonicParsing="false" onMouseClicked="#handleOnMouseClickedSignUp" text="Sign up" />
+                        <Label fx:id="fxLabelError" layoutX="243.0" layoutY="36.0" prefHeight="31.0" prefWidth="63.0" />
+                        <Label layoutX="15.0" layoutY="-2.0" prefHeight="54.0" prefWidth="201.0" text="Sign in">
+                           <font>
+                              <Font size="53.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="314.0" layoutY="-2.0" text="Sign up">
+                           <font>
+                              <Font size="53.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="registetUser" layoutX="10.0" layoutY="321.0" prefHeight="36.0" prefWidth="294.0" text="0 registet user" textFill="WHITE">
+                           <font>
+                              <Font name="Calibri Light" size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="fxTabChat" onSelectionChanged="#handleOnSelectionChanged" text="Chat">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="975.0">
+                     <children>
+                        <Rectangle fx:id="tabAcc" arcHeight="5.0" arcWidth="5.0" fill="#018378" height="374.0" layoutX="-9.0" layoutY="-13.0" stroke="BLACK" strokeType="INSIDE" width="607.0" />
+                        <TextArea fx:id="fxTextAreaChat" layoutX="14.0" layoutY="14.0" prefHeight="245.0" prefWidth="549.0" />
+                        <TextField fx:id="fxTextFieldText" layoutX="15.0" layoutY="232.0" prefHeight="27.0" prefWidth="482.0" promptText="Message" />
+                        <Button layoutX="488.0" layoutY="233.0" mnemonicParsing="false" onMouseClicked="#handleOnMouseClickedSend" prefHeight="25.0" prefWidth="75.0" text="send" />
+                        <Label fx:id="fxLabelLogedInAs" layoutX="15.0" layoutY="307.0" prefHeight="27.0" prefWidth="185.0" />
+                        <ComboBox fx:id="comboUser" layoutX="15.0" layoutY="271.0" prefHeight="25.0" prefWidth="549.0" promptText="User" />
+                        <Button fx:id="logout" layoutX="509.0" layoutY="308.0" mnemonicParsing="false" onAction="#logoutOnAction" text="Logout" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#101717" height="204.0" layoutX="-21.0" layoutY="382.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1012.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#101717" height="386.0" layoutX="578.0" layoutY="-3.0" stroke="TRANSPARENT" strokeType="INSIDE" width="413.0" />
+      <Label layoutX="636.0" layoutY="27.0" prefHeight="93.0" prefWidth="272.0" text="easy." textFill="WHITE">
+         <font>
+            <Font size="76.0" />
+         </font>
+      </Label>
+      <Label layoutX="636.0" layoutY="153.0" prefHeight="111.0" prefWidth="310.0" text="reliable." textFill="WHITE">
+         <font>
+            <Font size="76.0" />
+         </font>
+      </Label>
+      <Label layoutX="636.0" layoutY="272.0" text="free." textFill="WHITE">
+         <font>
+            <Font size="76.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>
