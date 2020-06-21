@@ -14,6 +14,7 @@ import java.net.Socket;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -75,6 +76,8 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Rectangle tabAcc;
     int currentAmmount = 0;
+    HashMap<Integer, String> hashPersonen;
+    
 
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
@@ -90,9 +93,14 @@ public class FXMLDocumentController implements Initializable {
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
             ArrayList<User> arrpersonen = new ArrayList<>();
             arrpersonen = (ArrayList<User>) ois.readObject();
+            ois.close();
             comboUser.getItems().addAll(arrpersonen);
             currentAmmount = arrpersonen.size();
             registetUser.setText(arrpersonen.size() + " registered people");
+            
+            for (int i = 0; i < arrpersonen.size(); i++) {
+                hashPersonen.put(arrpersonen.get(i).getNumber(), arrpersonen.get(i).getUserName());
+            }
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -203,6 +211,16 @@ public class FXMLDocumentController implements Initializable {
             dos.writeObject(a);
             ObjectInputStream ois = new ObjectInputStream(ss.getInputStream());
             ArrayList<Message> list = (ArrayList) ois.readObject();
+            String tmp = "";
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getFrom() == user.getNumber()) {
+                    tmp += list.get(i).getDate() + ":" + "me" + ":" + list.get(i).getText()+"\n";
+                }else{
+                    tmp += list.get(i).getDate() + ":" + hashPersonen.get(list.get(i).getFrom()) + ":" + list.get(i).getText()+"\n";
+                } 
+                    
+            }
+            
 
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);

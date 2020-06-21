@@ -57,7 +57,7 @@
                         <TextField fx:id="fxTextFieldText" layoutX="15.0" layoutY="232.0" prefHeight="27.0" prefWidth="482.0" promptText="Message" />
                         <Button layoutX="488.0" layoutY="233.0" mnemonicParsing="false" onMouseClicked="#handleOnMouseClickedSend" prefHeight="25.0" prefWidth="75.0" text="send" />
                         <Label fx:id="fxLabelLogedInAs" layoutX="15.0" layoutY="307.0" prefHeight="27.0" prefWidth="185.0" />
-                        <ComboBox fx:id="comboUser" layoutX="15.0" layoutY="271.0" onMouseClicked="#handleOnMouseClickedCheckBox" prefHeight="25.0" prefWidth="549.0" promptText="User" />
+                        <ComboBox fx:id="comboUser" layoutX="15.0" layoutY="271.0" prefHeight="25.0" prefWidth="549.0" promptText="User" />
                         <Button fx:id="logout" layoutX="509.0" layoutY="308.0" mnemonicParsing="false" onAction="#logoutOnAction" text="Logout" />
                      </children>
                   </AnchorPane>
