@@ -5,6 +5,7 @@
  */
 package clientchat;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,10 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.time.LocalDate;
-<<<<<<< HEAD
-=======
 import java.util.ArrayList;
->>>>>>> c92d16d29dc0438b769e9f666556c3a6e4e54a4d
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,13 +22,6 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-<<<<<<< HEAD
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
-=======
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -40,7 +31,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
->>>>>>> c92d16d29dc0438b769e9f666556c3a6e4e54a4d
 import model.Message;
 import model.User;
 
@@ -69,13 +59,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Tab fxTabChat;
     @FXML
-<<<<<<< HEAD
-    private TextField fxTextFieldTo;
-    @FXML
-    private Label fxLabelError;
-    @FXML
-    private Label fxLabelLogedInAs;
-=======
     private Label fxLabelError;
     @FXML
     private Label fxLabelLogedInAs;
@@ -92,7 +75,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Rectangle tabAcc;
     int currentAmmount = 0;
->>>>>>> c92d16d29dc0438b769e9f666556c3a6e4e54a4d
 
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
@@ -103,9 +85,6 @@ public class FXMLDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         fxTabChat.setDisable(true);
         fxTextAreaChat.setEditable(false);
-<<<<<<< HEAD
-
-=======
         try {
             Socket s = new Socket("localhost", 5003);
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
@@ -113,13 +92,12 @@ public class FXMLDocumentController implements Initializable {
             arrpersonen = (ArrayList<User>) ois.readObject();
             comboUser.getItems().addAll(arrpersonen);
             currentAmmount = arrpersonen.size();
-            registetUser.setText(arrpersonen.size()+" registered people");
+            registetUser.setText(arrpersonen.size() + " registered people");
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
->>>>>>> c92d16d29dc0438b769e9f666556c3a6e4e54a4d
     }
 
     @FXML
@@ -133,7 +111,7 @@ public class FXMLDocumentController implements Initializable {
             User ustmp = (User) ois.readObject();
             user.setNumber(ustmp.getNumber());
             fxTabChat.setDisable(false);
-            fxLabelLogedInAs.setText("loged in as "+user.getUserName());
+            fxLabelLogedInAs.setText("loged in as " + user.getUserName());
             Task tk = new Task() {
                 @Override
                 protected Object call() throws Exception {
@@ -142,14 +120,9 @@ public class FXMLDocumentController implements Initializable {
                         Socket s = ss.accept();
                         ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
                         Message me = (Message) ois.readObject();
-                        String a = fxTextAreaChat.getText() + "\n" + me.getDate() + ":" + me.getFrom()+":"+me.getText();
+                        String a = fxTextAreaChat.getText() + "\n" + me.getDate() + ":" + me.getFrom() + ":" + me.getText();
                         fxTextAreaChat.setText(a);
                     }
-<<<<<<< HEAD
-=======
-                    
-                    
->>>>>>> c92d16d29dc0438b769e9f666556c3a6e4e54a4d
 
                 }
 
@@ -163,41 +136,34 @@ public class FXMLDocumentController implements Initializable {
         } catch (NullPointerException ex) {
 
         }
-<<<<<<< HEAD
+        fxTextFieldSignInUser.setText("");
+        fxTextFieldSignInPassword.setText("");
+        pane.getSelectionModel().select(fxTabChat);
 
-=======
-         fxTextFieldSignInUser.setText("");
-         fxTextFieldSignInPassword.setText("");
-         pane.getSelectionModel().select(fxTabChat);
-         
->>>>>>> c92d16d29dc0438b769e9f666556c3a6e4e54a4d
     }
 
     @FXML
     private void handleOnMouseClickedSignUp(MouseEvent event) {
         try {
-            Socket s = new Socket("localhost",5002);
+            Socket s = new Socket("localhost", 5002);
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             oos.writeObject(new User(fxTextFieldSignUpUser.getText(), fxTextFieldSignUpPassword.getText(), 0));
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
             user = (User) ois.readObject();
-            if (user == null){
+            if (user == null) {
                 fxLabelError.setText("error");
-            }else{
-                fxLabelLogedInAs.setText("loged in as "+user.getUserName());
+            } else {
+                fxLabelLogedInAs.setText("loged in as " + user.getUserName());
             }
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-<<<<<<< HEAD
-=======
         fxTextFieldSignUpUser.setText("");
         fxTextFieldSignUpPassword.setText("");
         currentAmmount++;
-        registetUser.setText(currentAmmount+" registered people");
->>>>>>> c92d16d29dc0438b769e9f666556c3a6e4e54a4d
+        registetUser.setText(currentAmmount + " registered people");
     }
 
     @FXML
@@ -206,37 +172,43 @@ public class FXMLDocumentController implements Initializable {
         try {
             Socket s = new Socket("localhost", 5001);
             ObjectOutputStream dout = new ObjectOutputStream(s.getOutputStream());
-<<<<<<< HEAD
-            Message me = new Message(fxTextFieldText.getText(), Integer.parseInt(fxTextFieldTo.getText()), user.getNumber(), LocalDate.now().toString());
-=======
             Message me = new Message(fxTextFieldText.getText(), comboUser.getSelectionModel().getSelectedItem().getNumber(), user.getNumber(), LocalDate.now().toString());
->>>>>>> c92d16d29dc0438b769e9f666556c3a6e4e54a4d
             dout.writeObject(me);
-            String a = fxTextAreaChat.getText() + "\n" + me.getDate() + ":" + me.getTo()+":"+me.getText();
+            String a = fxTextAreaChat.getText() + "\n" + me.getDate() + ":" + me.getTo() + ":" + me.getText();
             fxTextAreaChat.setText(a);
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-<<<<<<< HEAD
-
-=======
-         fxTextFieldText.setText("");
->>>>>>> c92d16d29dc0438b769e9f666556c3a6e4e54a4d
+        fxTextFieldText.setText("");
     }
 
     @FXML
     private void handleOnSelectionChanged(Event event) {
-        
+
     }
 
-<<<<<<< HEAD
-=======
     @FXML
     private void logoutOnAction(ActionEvent event) {
         pane.getSelectionModel().select(tabA);
         fxTabChat.setDisable(true);
-        
+
     }
 
->>>>>>> c92d16d29dc0438b769e9f666556c3a6e4e54a4d
+    @FXML
+    private void handleOnMouseClickedCheckBox(MouseEvent event) {
+        try {
+            int[] a = {user.getNumber(), comboUser.getValue().getNumber()};
+            Socket ss = new Socket("localhost", 5004);
+            ObjectOutputStream dos = new ObjectOutputStream(ss.getOutputStream());
+            dos.writeObject(a);
+            ObjectInputStream ois = new ObjectInputStream(ss.getInputStream());
+            ArrayList<Message> list = (ArrayList) ois.readObject();
+
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }
