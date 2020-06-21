@@ -3,15 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/home/boba/NetBeansProjects/clientChat/src/model/Message.java</file>
-            <file>file:/home/boba/NetBeansProjects/clientChat/src/clientchat/ClientChat.java</file>
-            <file>file:/home/boba/NetBeansProjects/clientChat/src/clientchat/FXMLDocumentController.java</file>
-            <file>file:/home/boba/NetBeansProjects/clientChat/src/model/User.java</file>
-            <file>file:/home/boba/NetBeansProjects/clientChat/src/clientchat/FXMLDocument.fxml</file>
-=======
-            <file>file:/home/boba/Downloads/Projekt%20Chat/ClientChat-master/src/clientchat/FXMLDocumentController.java</file>
->>>>>>> c92d16d29dc0438b769e9f666556c3a6e4e54a4d
+            <file>file:/home/boba/NetBeansProjects/Projekt%20Chat/clientChat/src/clientchat/FXMLDocumentController.java</file>
         </group>
     </open-files>
 </project-private>
