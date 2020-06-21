@@ -53,11 +53,7 @@ public class User implements Serializable{
 
     @Override
     public String toString() {
-<<<<<<< HEAD
-        return "User{" + "userName=" + userName + ", password=" + password + ", number=" + number + '}';
-=======
         return userName;
->>>>>>> c92d16d29dc0438b769e9f666556c3a6e4e54a4d
     }
     
     
