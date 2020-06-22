@@ -14,6 +14,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
@@ -96,7 +98,8 @@ public class FXMLDocumentController implements Initializable {
     ArrayList<Message> listBackUp;
 
     User sendTo;
-ArrayList<User> arrpersonen;
+    ArrayList<User> arrpersonen;
+
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
         label.setText("Hello World!");
@@ -111,8 +114,10 @@ ArrayList<User> arrpersonen;
             listBackUp = new ArrayList<>();
             fxTabChat.setDisable(true);
             fxTabViewChat.setEditable(false);
-            
-            Socket s = new Socket("localhost", 5003);
+            DatagramSocket socket = new DatagramSocket();
+            socket.connect(InetAddress.getByName("8.8.8.8"), 5000);
+            String ip = socket.getLocalAddress().getHostAddress();
+            Socket s = new Socket(ip, 5003);
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
             arrpersonen = new ArrayList<>();
 
@@ -122,25 +127,28 @@ ArrayList<User> arrpersonen;
                 XMLDecoder dec = new XMLDecoder(new FileInputStream(new File("Chat.xml")));
                 listBackUp = (ArrayList<Message>) dec.readObject();
                 dec.close();
-                
+
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ArrayIndexOutOfBoundsException ex) {
-                
+
             }
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         registetUser.setText(arrpersonen.size() + " registered people");
     }
 
     @FXML
     private void handleOnMouseClickedSignIn(MouseEvent event) {
         try {
-            Socket s = new Socket("localhost", 5000);
+            DatagramSocket socket = new DatagramSocket();
+            socket.connect(InetAddress.getByName("8.8.8.8"), 5000);
+            String ip = socket.getLocalAddress().getHostAddress();
+            Socket s = new Socket(ip, 5000);
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             user = new User(fxTextFieldSignInUser.getText(), fxTextFieldSignInPassword.getText(), 00);
             oos.writeObject(user);
@@ -182,7 +190,10 @@ ArrayList<User> arrpersonen;
 
         }
         try {
-            Socket s = new Socket("localhost", 5003);
+            DatagramSocket socket = new DatagramSocket();
+            socket.connect(InetAddress.getByName("8.8.8.8"), 5000);
+            String ip = socket.getLocalAddress().getHostAddress();
+            Socket s = new Socket(ip, 5003);
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
             ArrayList<User> arrpersonen = new ArrayList<>();
 
@@ -212,7 +223,10 @@ ArrayList<User> arrpersonen;
     @FXML
     private void handleOnMouseClickedSignUp(MouseEvent event) {
         try {
-            Socket s = new Socket("localhost", 5002);
+            DatagramSocket socket = new DatagramSocket();
+            socket.connect(InetAddress.getByName("8.8.8.8"), 5000);
+            String ip = socket.getLocalAddress().getHostAddress();
+            Socket s = new Socket(ip, 5002);
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             oos.writeObject(new User(fxTextFieldSignUpUser.getText(), fxTextFieldSignUpPassword.getText(), 0));
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
@@ -237,14 +251,17 @@ ArrayList<User> arrpersonen;
             }
         }
         comboUser.getItems().addAll(arrpersonen);
-        
+
     }
 
     @FXML
     private void handleOnMouseClickedSend(MouseEvent event) {
 
         try {
-            Socket s = new Socket("localhost", 5001);
+            DatagramSocket socket = new DatagramSocket();
+            socket.connect(InetAddress.getByName("8.8.8.8"), 5000);
+            String ip = socket.getLocalAddress().getHostAddress();
+            Socket s = new Socket(ip, 5001);
             ObjectOutputStream dout = new ObjectOutputStream(s.getOutputStream());
             Message me = new Message(fxTextFieldText.getText(), comboUser.getSelectionModel().getSelectedItem().getNumber(), user.getNumber(), LocalDate.now().toString());
             dout.writeObject(me);
