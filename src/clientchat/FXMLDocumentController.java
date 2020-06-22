@@ -5,7 +5,12 @@
  */
 package clientchat;
 
-import java.io.DataOutputStream;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -28,8 +33,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 import model.Message;
@@ -51,7 +59,6 @@ public class FXMLDocumentController implements Initializable {
     private TextField fxTextFieldSignUpUser;
     @FXML
     private TextField fxTextFieldSignUpPassword;
-    @FXML
     private TextArea fxTextAreaChat;
     @FXML
     private TextField fxTextFieldText;
@@ -76,9 +83,20 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Rectangle tabAcc;
     int currentAmmount = 0;
-    HashMap<Integer, String> hashPersonen;
-    
+    HashMap<User, Message> hashPersonen;
+    @FXML
+    private TableView<Message> fxTabViewChat;
+    @FXML
+    private TableColumn<Message, String> fxTabViewColumnDate;
+    @FXML
+    private TableColumn<Message, Integer> fxTabViewColumnFrom;
+    @FXML
+    private TableColumn<Message, String> fxTabViewColumnText;
 
+    ArrayList<Message> listBackUp;
+
+    User sendTo;
+ArrayList<User> arrpersonen;
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
         label.setText("Hello World!");
@@ -86,26 +104,37 @@ public class FXMLDocumentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        fxTabChat.setDisable(true);
-        fxTextAreaChat.setEditable(false);
         try {
+            fxTabViewColumnDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+            fxTabViewColumnFrom.setCellValueFactory(new PropertyValueFactory<>("from"));
+            fxTabViewColumnText.setCellValueFactory(new PropertyValueFactory<>("text"));
+            listBackUp = new ArrayList<>();
+            fxTabChat.setDisable(true);
+            fxTabViewChat.setEditable(false);
+            
             Socket s = new Socket("localhost", 5003);
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-            ArrayList<User> arrpersonen = new ArrayList<>();
+            arrpersonen = new ArrayList<>();
+
             arrpersonen = (ArrayList<User>) ois.readObject();
             ois.close();
-            comboUser.getItems().addAll(arrpersonen);
-            currentAmmount = arrpersonen.size();
-            registetUser.setText(arrpersonen.size() + " registered people");
-            
-            for (int i = 0; i < arrpersonen.size(); i++) {
-                hashPersonen.put(arrpersonen.get(i).getNumber(), arrpersonen.get(i).getUserName());
+            try {
+                XMLDecoder dec = new XMLDecoder(new FileInputStream(new File("Chat.xml")));
+                listBackUp = (ArrayList<Message>) dec.readObject();
+                dec.close();
+                
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                
             }
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        registetUser.setText(arrpersonen.size() + " registered people");
     }
 
     @FXML
@@ -123,13 +152,21 @@ public class FXMLDocumentController implements Initializable {
             Task tk = new Task() {
                 @Override
                 protected Object call() throws Exception {
-                    ServerSocket ss = new ServerSocket(user.getNumber());
+
                     while (true) {
+                        ServerSocket ss = new ServerSocket(user.getNumber());
                         Socket s = ss.accept();
                         ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
                         Message me = (Message) ois.readObject();
-                        String a = fxTextAreaChat.getText() + "\n" + me.getDate() + ":" + me.getFrom() + ":" + me.getText();
-                        fxTextAreaChat.setText(a);
+                        fxTabViewChat.getItems().add(me);
+                        try {
+                            listBackUp.add(me);
+                            XMLEncoder enc = new XMLEncoder(new FileOutputStream(new File("Chat.xml")));
+                            enc.writeObject(listBackUp);
+                            enc.close();
+                        } catch (FileNotFoundException ex) {
+                            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
 
                 }
@@ -144,6 +181,28 @@ public class FXMLDocumentController implements Initializable {
         } catch (NullPointerException ex) {
 
         }
+        try {
+            Socket s = new Socket("localhost", 5003);
+            ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+            ArrayList<User> arrpersonen = new ArrayList<>();
+
+            arrpersonen = (ArrayList<User>) ois.readObject();
+            ois.close();
+            for (int i = 0; i < arrpersonen.size(); i++) {
+                if (arrpersonen.get(i).getUserName().equals(user.getUserName())) {
+                    arrpersonen.remove(i);
+                    break;
+                }
+            }
+            comboUser.getItems().addAll(arrpersonen);
+            currentAmmount = arrpersonen.size();
+            registetUser.setText(arrpersonen.size() + " registered people");
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         fxTextFieldSignInUser.setText("");
         fxTextFieldSignInPassword.setText("");
         pane.getSelectionModel().select(fxTabChat);
@@ -163,15 +222,22 @@ public class FXMLDocumentController implements Initializable {
             } else {
                 fxLabelLogedInAs.setText("loged in as " + user.getUserName());
             }
+            s.close();
+            ois.close();
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        fxTextFieldSignUpUser.setText("");
-        fxTextFieldSignUpPassword.setText("");
-        currentAmmount++;
-        registetUser.setText(currentAmmount + " registered people");
+
+        for (int i = 0; i < arrpersonen.size(); i++) {
+            if (arrpersonen.get(i) == user) {
+                arrpersonen.remove(i);
+                break;
+            }
+        }
+        comboUser.getItems().addAll(arrpersonen);
+        
     }
 
     @FXML
@@ -182,12 +248,24 @@ public class FXMLDocumentController implements Initializable {
             ObjectOutputStream dout = new ObjectOutputStream(s.getOutputStream());
             Message me = new Message(fxTextFieldText.getText(), comboUser.getSelectionModel().getSelectedItem().getNumber(), user.getNumber(), LocalDate.now().toString());
             dout.writeObject(me);
-            String a = fxTextAreaChat.getText() + "\n" + me.getDate() + ":" + me.getTo() + ":" + me.getText();
-            fxTextAreaChat.setText(a);
+            fxTabViewChat.getItems().add(me);
+            s.close();
+            dout.close();
+            try {
+                listBackUp.add(me);
+                XMLEncoder enc = new XMLEncoder(new FileOutputStream(new File("Chat.xml")));
+                enc.writeObject(listBackUp);
+                enc.close();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ArrayIndexOutOfBoundsException ex) {
+
+            }
+
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        fxTextFieldText.setText("");
+
     }
 
     @FXML
@@ -199,34 +277,20 @@ public class FXMLDocumentController implements Initializable {
     private void logoutOnAction(ActionEvent event) {
         pane.getSelectionModel().select(tabA);
         fxTabChat.setDisable(true);
-
     }
 
     @FXML
-    private void handleOnMouseClickedCheckBox(MouseEvent event) {
-        try {
-            int[] a = {user.getNumber(), comboUser.getValue().getNumber()};
-            Socket ss = new Socket("localhost", 5004);
-            ObjectOutputStream dos = new ObjectOutputStream(ss.getOutputStream());
-            dos.writeObject(a);
-            ObjectInputStream ois = new ObjectInputStream(ss.getInputStream());
-            ArrayList<Message> list = (ArrayList) ois.readObject();
-            String tmp = "";
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getFrom() == user.getNumber()) {
-                    tmp += list.get(i).getDate() + ":" + "me" + ":" + list.get(i).getText()+"\n";
-                }else{
-                    tmp += list.get(i).getDate() + ":" + hashPersonen.get(list.get(i).getFrom()) + ":" + list.get(i).getText()+"\n";
-                } 
-                    
+    private void handleOnMouseClickedCombo(MouseEvent event) {
+
+        if (sendTo != comboUser.getValue()) {
+            sendTo = comboUser.getValue();
+            fxTabViewChat.getItems().clear();
+            for (int i = 0; i < listBackUp.size(); i++) {
+                if (listBackUp.get(i).getFrom() == sendTo.getNumber() || listBackUp.get(i).getTo() == sendTo.getNumber()) {
+                    fxTabViewChat.getItems().add(listBackUp.get(i));
+                }
             }
-            
-
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
 
+    }
 }

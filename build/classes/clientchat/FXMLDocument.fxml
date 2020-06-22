@@ -5,7 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Rectangle?>
@@ -53,12 +54,18 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="975.0">
                      <children>
                         <Rectangle fx:id="tabAcc" arcHeight="5.0" arcWidth="5.0" fill="#018378" height="374.0" layoutX="-9.0" layoutY="-13.0" stroke="BLACK" strokeType="INSIDE" width="607.0" />
-                        <TextArea fx:id="fxTextAreaChat" layoutX="14.0" layoutY="14.0" prefHeight="245.0" prefWidth="549.0" />
                         <TextField fx:id="fxTextFieldText" layoutX="15.0" layoutY="232.0" prefHeight="27.0" prefWidth="482.0" promptText="Message" />
                         <Button layoutX="488.0" layoutY="233.0" mnemonicParsing="false" onMouseClicked="#handleOnMouseClickedSend" prefHeight="25.0" prefWidth="75.0" text="send" />
                         <Label fx:id="fxLabelLogedInAs" layoutX="15.0" layoutY="307.0" prefHeight="27.0" prefWidth="185.0" />
-                        <ComboBox fx:id="comboUser" layoutX="15.0" layoutY="271.0" prefHeight="25.0" prefWidth="549.0" promptText="User" />
+                        <ComboBox fx:id="comboUser" layoutX="15.0" layoutY="271.0" onMouseClicked="#handleOnMouseClickedCombo" prefHeight="25.0" prefWidth="549.0" promptText="User" />
                         <Button fx:id="logout" layoutX="509.0" layoutY="308.0" mnemonicParsing="false" onAction="#logoutOnAction" text="Logout" />
+                        <TableView fx:id="fxTabViewChat" layoutX="8.0" prefHeight="230.0" prefWidth="609.0">
+                          <columns>
+                            <TableColumn fx:id="fxTabViewColumnDate" prefWidth="97.0" text="Date" />
+                            <TableColumn fx:id="fxTabViewColumnFrom" prefWidth="100.0" text="From" />
+                              <TableColumn fx:id="fxTabViewColumnText" prefWidth="378.0" text="Text" />
+                          </columns>
+                        </TableView>
                      </children>
                   </AnchorPane>
             </content>
