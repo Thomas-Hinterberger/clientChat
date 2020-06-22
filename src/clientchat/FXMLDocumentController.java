@@ -134,12 +134,15 @@ public class FXMLDocumentController implements Initializable {
 
             }
         } catch (IOException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            fxLabelError.setText("Server error");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        try {
+            registetUser.setText(arrpersonen.size() + " registered people");
+        } catch (NullPointerException ex) {
 
-        registetUser.setText(arrpersonen.size() + " registered people");
+        }
     }
 
     @FXML
@@ -251,7 +254,8 @@ public class FXMLDocumentController implements Initializable {
             }
         }
         comboUser.getItems().addAll(arrpersonen);
-
+        tabA.setDisable(true);
+        fxTabChat.setDisable(false);
     }
 
     @FXML
