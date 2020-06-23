@@ -8,21 +8,23 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="486.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientchat.FXMLDocumentController">
+<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="576.0" prefWidth="991.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientchat.FXMLDocumentController">
     <children>
         <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
-      <TabPane fx:id="pane" layoutX="-6.0" prefHeight="386.0" prefWidth="584.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="pane" layoutX="-6.0" prefHeight="586.0" prefWidth="584.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab fx:id="tabA" text="Account">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="523.0" prefWidth="859.0">
                      <children>
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="360.0" layoutX="303.0" layoutY="-3.0" stroke="TRANSPARENT" strokeType="INSIDE" width="283.0" />
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#0e9482" height="557.0" layoutX="5.0" stroke="TRANSPARENT" strokeType="INSIDE" width="299.0" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#0e9482" height="371.0" layoutX="5.0" stroke="TRANSPARENT" strokeType="INSIDE" width="299.0" />
                         <TextField fx:id="fxTextFieldSignInUser" layoutX="80.0" layoutY="144.0" promptText="User" />
                         <TextField fx:id="fxTextFieldSignInPassword" layoutX="80.0" layoutY="190.0" promptText="Password" />
                         <Button layoutX="128.0" layoutY="246.0" mnemonicParsing="false" onMouseClicked="#handleOnMouseClickedSignIn" text="Sign in" textFill="#390000" />
@@ -40,11 +42,12 @@
                               <Font size="53.0" />
                            </font>
                         </Label>
-                        <Label fx:id="registetUser" layoutX="10.0" layoutY="321.0" prefHeight="36.0" prefWidth="294.0" text="0 registet user" textFill="WHITE">
+                        <Label fx:id="registetUser" layoutX="8.0" layoutY="322.0" prefHeight="34.0" prefWidth="294.0" text="0 registet user" textFill="WHITE">
                            <font>
                               <Font name="Calibri Light" size="15.0" />
                            </font>
                         </Label>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#101717" height="200.0" layoutX="-2.0" layoutY="357.0" stroke="BLACK" strokeType="INSIDE" width="611.0" />
                      </children>
                   </AnchorPane>
             </content>
@@ -53,7 +56,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="975.0">
                      <children>
-                        <Rectangle fx:id="tabAcc" arcHeight="5.0" arcWidth="5.0" fill="#018378" height="374.0" layoutX="-9.0" layoutY="-13.0" stroke="BLACK" strokeType="INSIDE" width="607.0" />
+                        <Rectangle fx:id="tabAcc" arcHeight="5.0" arcWidth="5.0" fill="#018378" height="578.0" layoutX="-9.0" layoutY="-13.0" stroke="BLACK" strokeType="INSIDE" width="605.0" />
                         <TextField fx:id="fxTextFieldText" layoutX="15.0" layoutY="232.0" prefHeight="27.0" prefWidth="482.0" promptText="Message" />
                         <Button layoutX="488.0" layoutY="233.0" mnemonicParsing="false" onMouseClicked="#handleOnMouseClickedSend" prefHeight="25.0" prefWidth="75.0" text="send" />
                         <Label fx:id="fxLabelLogedInAs" layoutX="15.0" layoutY="307.0" prefHeight="27.0" prefWidth="185.0" />
@@ -66,14 +69,19 @@
                               <TableColumn fx:id="fxTabViewColumnText" prefWidth="378.0" text="Text" />
                           </columns>
                         </TableView>
+                        <Button fx:id="choosefile" layoutX="420.0" layoutY="233.0" mnemonicParsing="false" onAction="#chooseFileOnAction" prefHeight="25.0" prefWidth="77.0" text="Choose File" />
+                        <ImageView fx:id="currenimage" fitHeight="150.0" fitWidth="252.0" layoutX="15.0" layoutY="370.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@defaultpic.PNG" />
+                           </image>
+                        </ImageView>
                      </children>
                   </AnchorPane>
             </content>
           </Tab>
         </tabs>
       </TabPane>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#101717" height="204.0" layoutX="-21.0" layoutY="382.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1012.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#101717" height="386.0" layoutX="578.0" layoutY="-3.0" stroke="TRANSPARENT" strokeType="INSIDE" width="413.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#101717" height="586.0" layoutX="573.0" stroke="TRANSPARENT" strokeType="INSIDE" width="422.0" />
       <Label layoutX="636.0" layoutY="27.0" prefHeight="93.0" prefWidth="272.0" text="easy" textFill="WHITE">
          <font>
             <Font size="76.0" />
@@ -84,7 +92,7 @@
             <Font size="76.0" />
          </font>
       </Label>
-      <Label layoutX="636.0" layoutY="272.0" text="free" textFill="WHITE">
+      <Label layoutX="636.0" layoutY="246.0" text="free" textFill="WHITE">
          <font>
             <Font size="76.0" />
          </font>

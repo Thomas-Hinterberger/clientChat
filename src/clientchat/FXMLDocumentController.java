@@ -5,8 +5,11 @@
  */
 package clientchat;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -40,8 +43,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
+import javax.imageio.ImageIO;
 import model.Message;
 import model.User;
 
@@ -99,6 +106,14 @@ public class FXMLDocumentController implements Initializable {
 
     User sendTo;
     ArrayList<User> arrpersonen;
+    @FXML
+    private Button choosefile;
+    @FXML
+    private AnchorPane anchor;
+    
+    @FXML
+    private ImageView currenimage;
+    byte[] image;
 
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
@@ -220,6 +235,7 @@ public class FXMLDocumentController implements Initializable {
         fxTextFieldSignInUser.setText("");
         fxTextFieldSignInPassword.setText("");
         pane.getSelectionModel().select(fxTabChat);
+        tabA.setDisable(false);
 
     }
 
@@ -313,5 +329,31 @@ public class FXMLDocumentController implements Initializable {
             }
         }
 
+    }
+
+    @FXML
+    private void chooseFileOnAction(ActionEvent event) throws FileNotFoundException, IOException {
+        image = null;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Send Picture");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All Images", "*.*"),
+                new FileChooser.ExtensionFilter("JPG", "*.jpg"),
+                new FileChooser.ExtensionFilter("GIF", "*.gif"),
+                new FileChooser.ExtensionFilter("BMP", "*.bmp"),
+                new FileChooser.ExtensionFilter("PNG", "*.png")
+        );
+        File f = fileChooser.showOpenDialog(anchor.getScene().getWindow());
+        fxTextFieldText.setText("IMAGE: " + f.getAbsolutePath());
+        javafx.scene.image.Image i = new javafx.scene.image.Image(new FileInputStream(f));
+        currenimage.setImage(i);
+
+        //to byte array
+        BufferedImage bImage = ImageIO.read(f);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(bImage, "jpg", bos);
+        image = bos.toByteArray();
+        
     }
 }
