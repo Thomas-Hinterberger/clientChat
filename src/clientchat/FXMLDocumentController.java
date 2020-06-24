@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -110,7 +111,7 @@ public class FXMLDocumentController implements Initializable {
     private Button choosefile;
     @FXML
     private AnchorPane anchor;
-    
+
     @FXML
     private ImageView currenimage;
     byte[] image;
@@ -283,7 +284,7 @@ public class FXMLDocumentController implements Initializable {
             String ip = socket.getLocalAddress().getHostAddress();
             Socket s = new Socket(ip, 5001);
             ObjectOutputStream dout = new ObjectOutputStream(s.getOutputStream());
-            Message me = new Message(fxTextFieldText.getText(), comboUser.getSelectionModel().getSelectedItem().getNumber(), user.getNumber(), LocalDate.now().toString());
+            Message me = new Message(fxTextFieldText.getText(), comboUser.getSelectionModel().getSelectedItem().getNumber(), user.getNumber(), LocalDate.now().toString(),image);
             dout.writeObject(me);
             fxTabViewChat.getItems().add(me);
             s.close();
@@ -345,15 +346,28 @@ public class FXMLDocumentController implements Initializable {
                 new FileChooser.ExtensionFilter("PNG", "*.png")
         );
         File f = fileChooser.showOpenDialog(anchor.getScene().getWindow());
-        fxTextFieldText.setText("IMAGE: " + f.getAbsolutePath());
-        javafx.scene.image.Image i = new javafx.scene.image.Image(new FileInputStream(f));
-        currenimage.setImage(i);
+        try {
+            fxTextFieldText.setText("IMAGE: " + f.getAbsolutePath());
+            javafx.scene.image.Image i = new javafx.scene.image.Image(new FileInputStream(f));
+            currenimage.setImage(i);
+        } catch (NullPointerException ex) {
+
+        }
 
         //to byte array
         BufferedImage bImage = ImageIO.read(f);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ImageIO.write(bImage, "jpg", bos);
         image = bos.toByteArray();
-        
+
+    }
+
+    @FXML
+    private void handleOnMouseClickedTabView(MouseEvent event) {
+        try {
+            currenimage.setImage(new javafx.scene.image.Image(new ByteArrayInputStream(fxTabViewChat.getSelectionModel().getSelectedItem().getI())));
+        } catch (NullPointerException ex) {
+
+        }
     }
 }
