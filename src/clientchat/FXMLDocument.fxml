@@ -62,7 +62,7 @@
                         <Label fx:id="fxLabelLogedInAs" layoutX="15.0" layoutY="307.0" prefHeight="27.0" prefWidth="185.0" />
                         <ComboBox fx:id="comboUser" layoutX="15.0" layoutY="271.0" onMouseClicked="#handleOnMouseClickedCombo" prefHeight="25.0" prefWidth="549.0" promptText="User" />
                         <Button fx:id="logout" layoutX="509.0" layoutY="308.0" mnemonicParsing="false" onAction="#logoutOnAction" text="Logout" />
-                        <TableView fx:id="fxTabViewChat" layoutX="8.0" prefHeight="230.0" prefWidth="609.0">
+                        <TableView fx:id="fxTabViewChat" layoutX="8.0" onMouseClicked="#handleOnMouseClickedTabView" prefHeight="230.0" prefWidth="609.0">
                           <columns>
                             <TableColumn fx:id="fxTabViewColumnDate" prefWidth="97.0" text="Date" />
                             <TableColumn fx:id="fxTabViewColumnFrom" prefWidth="100.0" text="From" />

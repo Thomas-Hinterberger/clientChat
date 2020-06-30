@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +29,7 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -110,7 +112,7 @@ public class FXMLDocumentController implements Initializable {
     private Button choosefile;
     @FXML
     private AnchorPane anchor;
-    
+
     @FXML
     private ImageView currenimage;
     byte[] image;
@@ -170,8 +172,10 @@ public class FXMLDocumentController implements Initializable {
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             user = new User(fxTextFieldSignInUser.getText(), fxTextFieldSignInPassword.getText(), 00);
             oos.writeObject(user);
+            
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
             User ustmp = (User) ois.readObject();
+            
             user.setNumber(ustmp.getNumber());
             fxTabChat.setDisable(false);
             fxLabelLogedInAs.setText("loged in as " + user.getUserName());
@@ -184,11 +188,19 @@ public class FXMLDocumentController implements Initializable {
                         Socket s = ss.accept();
                         ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
                         Message me = (Message) ois.readObject();
-                        fxTabViewChat.getItems().add(me);
+                        ois.close();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                fxTabViewChat.getItems().add(me);
+                            }
+                        });
+
                         try {
                             listBackUp.add(me);
                             XMLEncoder enc = new XMLEncoder(new FileOutputStream(new File("Chat.xml")));
                             enc.writeObject(listBackUp);
+                            enc.flush();
                             enc.close();
                         } catch (FileNotFoundException ex) {
                             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
@@ -200,6 +212,10 @@ public class FXMLDocumentController implements Initializable {
             };
             Thread th = new Thread(tk);
             th.start();
+            ois.close();
+            oos.flush();
+            oos.close();
+            s.close();
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -231,7 +247,7 @@ public class FXMLDocumentController implements Initializable {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
         fxTextFieldSignInUser.setText("");
         fxTextFieldSignInPassword.setText("");
         pane.getSelectionModel().select(fxTabChat);
@@ -248,6 +264,8 @@ public class FXMLDocumentController implements Initializable {
             Socket s = new Socket(ip, 5002);
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             oos.writeObject(new User(fxTextFieldSignUpUser.getText(), fxTextFieldSignUpPassword.getText(), 0));
+            oos.flush();
+            oos.close();
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
             user = (User) ois.readObject();
             if (user == null) {
@@ -283,10 +301,11 @@ public class FXMLDocumentController implements Initializable {
             String ip = socket.getLocalAddress().getHostAddress();
             Socket s = new Socket(ip, 5001);
             ObjectOutputStream dout = new ObjectOutputStream(s.getOutputStream());
-            Message me = new Message(fxTextFieldText.getText(), comboUser.getSelectionModel().getSelectedItem().getNumber(), user.getNumber(), LocalDate.now().toString());
+            Message me = new Message(fxTextFieldText.getText(), comboUser.getSelectionModel().getSelectedItem().getNumber(), user.getNumber(), LocalDate.now().toString(), image);
             dout.writeObject(me);
             fxTabViewChat.getItems().add(me);
             s.close();
+            dout.flush();
             dout.close();
             try {
                 listBackUp.add(me);
@@ -345,15 +364,28 @@ public class FXMLDocumentController implements Initializable {
                 new FileChooser.ExtensionFilter("PNG", "*.png")
         );
         File f = fileChooser.showOpenDialog(anchor.getScene().getWindow());
-        fxTextFieldText.setText("IMAGE: " + f.getAbsolutePath());
-        javafx.scene.image.Image i = new javafx.scene.image.Image(new FileInputStream(f));
-        currenimage.setImage(i);
+        try {
+            fxTextFieldText.setText("IMAGE: " + f.getAbsolutePath());
+            javafx.scene.image.Image i = new javafx.scene.image.Image(new FileInputStream(f));
+            currenimage.setImage(i);
+        } catch (NullPointerException ex) {
+
+        }
 
         //to byte array
         BufferedImage bImage = ImageIO.read(f);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ImageIO.write(bImage, "jpg", bos);
         image = bos.toByteArray();
-        
+
+    }
+
+    @FXML
+    private void handleOnMouseClickedTabView(MouseEvent event) {
+        try {
+            currenimage.setImage(new javafx.scene.image.Image(new ByteArrayInputStream(fxTabViewChat.getSelectionModel().getSelectedItem().getI())));
+        } catch (NullPointerException ex) {
+
+        }
     }
 }
