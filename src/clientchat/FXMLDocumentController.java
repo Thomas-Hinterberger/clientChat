@@ -104,7 +104,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private TableColumn<Message, String> fxTabViewColumnText;
 
-    ArrayList<Message> listBackUp;
+    static ArrayList<Message> listBackUp;
 
     User sendTo;
     ArrayList<User> arrpersonen;
@@ -196,15 +196,7 @@ public class FXMLDocumentController implements Initializable {
                             }
                         });
 
-                        try {
-                            listBackUp.add(me);
-                            XMLEncoder enc = new XMLEncoder(new FileOutputStream(new File("Chat.xml")));
-                            enc.writeObject(listBackUp);
-                            enc.flush();
-                            enc.close();
-                        } catch (FileNotFoundException ex) {
-                            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        listBackUp.add(me);
                     }
 
                 }
@@ -309,11 +301,7 @@ public class FXMLDocumentController implements Initializable {
             dout.close();
             try {
                 listBackUp.add(me);
-                XMLEncoder enc = new XMLEncoder(new FileOutputStream(new File("Chat.xml")));
-                enc.writeObject(listBackUp);
-                enc.close();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                
             } catch (ArrayIndexOutOfBoundsException ex) {
 
             }
@@ -375,7 +363,7 @@ public class FXMLDocumentController implements Initializable {
         //to byte array
         BufferedImage bImage = ImageIO.read(f);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ImageIO.write(bImage, "jpg", bos);
+        ImageIO.write(bImage, "jpg,gif", bos);
         image = bos.toByteArray();
 
     }
