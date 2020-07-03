@@ -27,6 +27,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -132,7 +134,7 @@ public class FXMLDocumentController implements Initializable {
             fxTabChat.setDisable(true);
             fxTabViewChat.setEditable(false);
             DatagramSocket socket = new DatagramSocket();
-            socket.connect(InetAddress.getByName("8.8.8.8"), 5000);
+            socket.connect(InetAddress.getByName("8.8.8.8"), 5003);
             String ip = socket.getLocalAddress().getHostAddress();
             Socket s = new Socket(ip, 5003);
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
@@ -172,19 +174,20 @@ public class FXMLDocumentController implements Initializable {
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
             user = new User(fxTextFieldSignInUser.getText(), fxTextFieldSignInPassword.getText(), 00);
             oos.writeObject(user);
-            
+
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
             User ustmp = (User) ois.readObject();
-            
+
             user.setNumber(ustmp.getNumber());
             fxTabChat.setDisable(false);
             fxLabelLogedInAs.setText("loged in as " + user.getUserName());
+            ExecutorService ex = Executors.newFixedThreadPool(5000);
             Task tk = new Task() {
                 @Override
                 protected Object call() throws Exception {
-
+                    ServerSocket ss = new ServerSocket(user.getNumber());
                     while (true) {
-                        ServerSocket ss = new ServerSocket(user.getNumber());
+
                         Socket s = ss.accept();
                         ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
                         Message me = (Message) ois.readObject();
@@ -203,7 +206,7 @@ public class FXMLDocumentController implements Initializable {
 
             };
             Thread th = new Thread(tk);
-            th.start();
+            ex.execute(th);
             ois.close();
             oos.flush();
             oos.close();
@@ -217,7 +220,7 @@ public class FXMLDocumentController implements Initializable {
         }
         try {
             DatagramSocket socket = new DatagramSocket();
-            socket.connect(InetAddress.getByName("8.8.8.8"), 5000);
+            socket.connect(InetAddress.getByName("8.8.8.8"), 5003);
             String ip = socket.getLocalAddress().getHostAddress();
             Socket s = new Socket(ip, 5003);
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
@@ -239,7 +242,7 @@ public class FXMLDocumentController implements Initializable {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         fxTextFieldSignInUser.setText("");
         fxTextFieldSignInPassword.setText("");
         pane.getSelectionModel().select(fxTabChat);
@@ -251,7 +254,7 @@ public class FXMLDocumentController implements Initializable {
     private void handleOnMouseClickedSignUp(MouseEvent event) {
         try {
             DatagramSocket socket = new DatagramSocket();
-            socket.connect(InetAddress.getByName("8.8.8.8"), 5000);
+            socket.connect(InetAddress.getByName("8.8.8.8"), 5002);
             String ip = socket.getLocalAddress().getHostAddress();
             Socket s = new Socket(ip, 5002);
             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
@@ -289,7 +292,7 @@ public class FXMLDocumentController implements Initializable {
 
         try {
             DatagramSocket socket = new DatagramSocket();
-            socket.connect(InetAddress.getByName("8.8.8.8"), 5000);
+            socket.connect(InetAddress.getByName("8.8.8.8"), 5001);
             String ip = socket.getLocalAddress().getHostAddress();
             Socket s = new Socket(ip, 5001);
             ObjectOutputStream dout = new ObjectOutputStream(s.getOutputStream());
@@ -301,7 +304,7 @@ public class FXMLDocumentController implements Initializable {
             dout.close();
             try {
                 listBackUp.add(me);
-                
+
             } catch (ArrayIndexOutOfBoundsException ex) {
 
             }
@@ -363,7 +366,7 @@ public class FXMLDocumentController implements Initializable {
         //to byte array
         BufferedImage bImage = ImageIO.read(f);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ImageIO.write(bImage, "jpg,gif", bos);
+        ImageIO.write(bImage, "jpg", bos);
         image = bos.toByteArray();
 
     }
